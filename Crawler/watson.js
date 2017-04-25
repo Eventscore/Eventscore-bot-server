@@ -50,6 +50,10 @@ exports.toneAnalysis = function(data) {
     // var maxInstances = 6;
     var cleanData = cleanupOutputData(result);
     return cleanData;
+  })
+  .catch((error) => {
+    console.log(error);
+    return error;
   });
 }
 
@@ -79,8 +83,6 @@ function cleanupInputData(data) {
 function cleanupOutputData(data) {
   return new Promise((resolve, reject) => {
     var cleanData = data.map((element) => {
-      var logInstances = Math.log10(element.instances);
-      var diffScore = obj.watsonToneJoy - obj.negativeScore;
       var obj = {};
       obj.keyword = element.keyword;
       obj.instances = element.instances;
@@ -91,6 +93,8 @@ function cleanupOutputData(data) {
       obj.watsonToneJoy = obj.watsonCategoryRaw[0].tones[3].score;
       obj.watsonToneSadness = obj.watsonCategoryRaw[0].tones[4].score;
       obj.negativeScore = (obj.watsonToneAnger + obj.watsonToneDisgust + obj.watsonToneFear + obj.watsonToneSadness)/4;
+      var diffScore = obj.watsonToneJoy - obj.negativeScore;
+      var logInstances = Math.log10(element.instances);
       obj.score = ((diffScore + (2*logInstances/6))+1)/4;
       console.log(obj);
       return obj;

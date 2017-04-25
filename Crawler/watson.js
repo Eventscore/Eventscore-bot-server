@@ -41,12 +41,12 @@ exports.toneAnalysis = function(data) {
     );
   })
   .then((result) => {
-    // var maxInstances = result.reduce((acc, cur) => {
-    //   if(cur.instances > acc) {
-    //     acc = cur.instances;
-    //   }
-    //   return acc;
-    // },0);
+    var maxInstances = result.reduce((acc, cur) => {
+      if(cur.instances > acc) {
+        acc = cur.instances;
+      }
+      return acc;
+    },0);
     // var maxInstances = 6;
     var cleanData = cleanupOutputData(result);
     return cleanData;
@@ -95,7 +95,7 @@ function cleanupOutputData(data) {
       obj.negativeScore = (obj.watsonToneAnger + obj.watsonToneDisgust + obj.watsonToneFear + obj.watsonToneSadness)/4;
       var diffScore = obj.watsonToneJoy - obj.negativeScore;
       var logInstances = Math.log10(element.instances);
-      obj.score = ((diffScore + (2*logInstances/6))+1)/4;
+      obj.score = ((diffScore + (2*logInstances/maxInstances))+1)/4;
       console.log(obj);
       return obj;
     });

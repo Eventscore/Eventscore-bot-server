@@ -41,6 +41,13 @@ exports.toneAnalysis = function(data) {
     );
   })
   .then((result) => {
+    // var maxInstances = result.reduce((acc, cur) => {
+    //   if(cur.instances > acc) {
+    //     acc = cur.instances;
+    //   }
+    //   return acc;
+    // },0);
+    var maxInstances = 6;
     var cleanData = cleanupOutputData(result);
     return cleanData;
   });
@@ -75,6 +82,7 @@ function cleanupOutputData(data) {
       var obj = {};
       obj.keyword = element.keyword;
       obj.instances = element.instances;
+      obj.logInstances = Math.log10(element.instances);
       obj.watsonCategoryRaw = element.watsonScore.document_tone.tone_categories;
       obj.watsonToneAnger = obj.watsonCategoryRaw[0].tones[0].score;
       obj.watsonToneDisgust = obj.watsonCategoryRaw[0].tones[1].score;
@@ -82,7 +90,8 @@ function cleanupOutputData(data) {
       obj.watsonToneJoy = obj.watsonCategoryRaw[0].tones[3].score;
       obj.watsonToneSadness = obj.watsonCategoryRaw[0].tones[4].score;
       obj.negativeScore = (obj.watsonToneAnger + obj.watsonToneDisgust + obj.watsonToneFear + obj.watsonToneSadness)/4;
-      obj.score = ((obj.watsonToneJoy - obj.negativeScore)+100)/2;
+      obj.diffScore = obj.watsonToneJoy - obj.negativeScore;
+      obj.score = ((obj.diffScore + (2*obj.logInstances/maxInstances))+1)/4;
       return obj;
     });
     resolve(cleanData);

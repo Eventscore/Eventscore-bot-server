@@ -47,7 +47,7 @@ exports.toneAnalysis = function(data) {
     //   }
     //   return acc;
     // },0);
-    var maxInstances = 6;
+    // var maxInstances = 6;
     var cleanData = cleanupOutputData(result);
     return cleanData;
   });
@@ -91,7 +91,8 @@ function cleanupOutputData(data) {
       obj.watsonToneJoy = obj.watsonCategoryRaw[0].tones[3].score;
       obj.watsonToneSadness = obj.watsonCategoryRaw[0].tones[4].score;
       obj.negativeScore = (obj.watsonToneAnger + obj.watsonToneDisgust + obj.watsonToneFear + obj.watsonToneSadness)/4;
-      obj.score = ((diffScore + (2*logInstances/maxInstances))+1)/4;
+      obj.score = ((diffScore + (2*logInstances/6))+1)/4;
+      console.log(obj);
       return obj;
     });
     resolve(cleanData);

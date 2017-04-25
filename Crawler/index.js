@@ -6,7 +6,6 @@ exports.keywords = [
 ];
 
 exports.initiate = function(){
-  console.log('----------crawl.initiatecrawl------------');
   return Crawl.initiateCrawl();
 }
 

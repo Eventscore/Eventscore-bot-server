@@ -1,8 +1,6 @@
 var watson = require('watson-developer-cloud');
 var Promise = require('bluebird');
 
-const maxInstances;
-
 exports.toneAnalysis = function(data) {
   //TODO: Move credentials to env file and git ignore it
   var tone_analyzer = watson.tone_analyzer({
@@ -43,7 +41,7 @@ exports.toneAnalysis = function(data) {
     );
   })
   .then((result) => {
-    maxInstances = result.reduce((acc, cur) => {
+    global.maxInstances = result.reduce((acc, cur) => {
       if(cur.instances > acc) {
         acc = cur.instances;
       }
@@ -96,7 +94,7 @@ function cleanupOutputData(data) {
       obj.negativeScore = (obj.watsonToneAnger + obj.watsonToneDisgust + obj.watsonToneFear + obj.watsonToneSadness)/4;
       var diffScore = obj.watsonToneJoy - obj.negativeScore;
       var logInstances = Math.log10(element.instances);
-      obj.score = ((diffScore + (2*logInstances/maxInstances))+1)/4;
+      obj.score = ((diffScore + (2*logInstances/global.maxInstances))+1)/4;
       console.log('---------maxInstances----------',maxInstances);
       return obj;
     });

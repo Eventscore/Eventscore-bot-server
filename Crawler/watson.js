@@ -79,10 +79,11 @@ function cleanupInputData(data) {
 function cleanupOutputData(data) {
   return new Promise((resolve, reject) => {
     var cleanData = data.map((element) => {
+      var logInstances = Math.log10(element.instances);
+      var diffScore = obj.watsonToneJoy - obj.negativeScore;
       var obj = {};
       obj.keyword = element.keyword;
       obj.instances = element.instances;
-      obj.logInstances = Math.log10(element.instances);
       obj.watsonCategoryRaw = element.watsonScore.document_tone.tone_categories;
       obj.watsonToneAnger = obj.watsonCategoryRaw[0].tones[0].score;
       obj.watsonToneDisgust = obj.watsonCategoryRaw[0].tones[1].score;
@@ -90,8 +91,7 @@ function cleanupOutputData(data) {
       obj.watsonToneJoy = obj.watsonCategoryRaw[0].tones[3].score;
       obj.watsonToneSadness = obj.watsonCategoryRaw[0].tones[4].score;
       obj.negativeScore = (obj.watsonToneAnger + obj.watsonToneDisgust + obj.watsonToneFear + obj.watsonToneSadness)/4;
-      obj.diffScore = obj.watsonToneJoy - obj.negativeScore;
-      obj.score = ((obj.diffScore + (2*obj.logInstances/maxInstances))+1)/4;
+      obj.score = ((diffScore + (2*logInstances/maxInstances))+1)/4;
       return obj;
     });
     resolve(cleanData);

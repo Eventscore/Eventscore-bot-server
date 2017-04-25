@@ -40,15 +40,15 @@ exports.toneAnalysis = function(data) {
       })
     );
   })
-  .then((result) => {
-    var maxInstances = result.reduce((acc, cur) => {
+  .then(async (result) => {
+    var maxInstances = await result.reduce((acc, cur) => {
       if(cur.instances > acc) {
         acc = cur.instances;
       }
       return acc;
     },0);
     // var maxInstances = 6;
-    var cleanData = cleanupOutputData(result);
+    var cleanData = await cleanupOutputData(result);
     return cleanData;
   })
   .catch((error) => {

@@ -96,7 +96,7 @@ function cleanupOutputData(data) {
       var diffScore = obj.watsonToneJoy - obj.negativeScore;
       var logInstances = Math.log10(element.instances);
       obj.score = ((diffScore + (2*logInstances/maxInstances))+1)/4;
-      console.log(obj);
+      console.log('---------maxInstances----------',maxInstances);
       return obj;
     });
     resolve(cleanData);
